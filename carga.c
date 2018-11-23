@@ -2,9 +2,9 @@
 
 void main()
 {
-	int num[11];
+	float num[11];
 	FILE *arch;
-	int lec;
+	float lec;
 	int i = 0;
 
 	arch = fopen("polinomios.txt", "r");
@@ -13,13 +13,13 @@ void main()
 		printf("fallo la lectura");
 	}
 	else {
-		while (feof == 0){
-			fscanf(arch, "%d", &lec);
+		while (feof(arch) == 0){
+			for (i; i <= 11; i++){
+			fscanf(arch, "%f", &lec);
 			num[i] = lec;
-			i++;
-			
 			}
-	printf("%d\n", num[4]);
+			}
+	printf("%f\n", num[7]);
 	}	
 }
 	
