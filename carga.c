@@ -2,10 +2,11 @@
 
 void main()
 {
-	float num[11];
+	float num[15][11];
 	FILE *arch;
 	float lec;
 	int i = 0;
+	int j = 0;
 
 	arch = fopen("polinomios.txt", "r");
 
@@ -15,11 +16,13 @@ void main()
 	else {
 		while (feof(arch) == 0){
 			for (i; i <= 11; i++){
-			fscanf(arch, "%f", &lec);
-			num[i] = lec;
+				fscanf(arch, "%f", &lec);
+				num[j][i] = lec;
+				}
+			j++;
+			printf("%d\n", feof(arch));
 			}
-			}
-	printf("%f\n", num[7]);
+	printf("%f\n %d\n %d\n", num[0][4], i, j);
 	}	
 }
 	
