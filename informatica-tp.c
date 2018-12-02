@@ -75,6 +75,20 @@ void Ordenar(int *x1, int *x2)
 	*x2 = aux2;
 }
 
+void EVALUA_INTERVALO(int x1, int x2,float array[][11], int pol)
+{
+	FILE *arch;
+	int i;
+
+	arch = fopen("valores_polinomios.txt", "w");
+
+	for ( i = x1; i <= x2; i++)
+	{
+		fprintf(arch, "P(%d)= %2.1f\n", i, EVALUA_enX(pol, i, array));
+	}
+	fclose(arch);
+}
+
 
 void main()
 {
@@ -86,7 +100,8 @@ void main()
 	int nro;       // Declaro variable para opcion de polinomio en evaluacion
 	float resul_eval; // Declaro variable real para mostrar el resultad de evaluar el polinomio en x
 	float val_x; // Declaro variable real para evaluar el polinomio
-	int extremo1, extremo2;
+	int extremo1, extremo2;   //Declaro variables enteras para los extremos del intervalo del item 3
+	int marcador = 0; //Declaro variable entera para verificar el paso por la opcion 3
 
 	CARGA(polinomios, &cantpol);    /*Llamo a la variable CARGA para que lea el archivo y guarde los polinomios en el arreglo "polinomios" y la cantidad de polinomios en la variable "cantpol"*/
 
@@ -132,9 +147,9 @@ void main()
 				while(nro < 1 || nro > cantpol)
 				{
 					printf("Opcion no valida! Vuelva a ingresar.\n");
-					scanf("%d\n", &nro);
+					scanf("%d", &nro);
 				}	
-				printf("Ingrese un valor de X: ");
+				printf("\nIngrese un valor de X: ");
 				scanf("%f", &val_x);
 				nro = nro - 1;
 				resul_eval = EVALUA_enX(nro, val_x, polinomios);
@@ -159,18 +174,24 @@ void main()
 				while(nro < 1 || nro > cantpol)
 				{
 					printf("Opcion no valida! Vuelva a ingresar.\n");
-					scanf("%d\n", &nro);
+					scanf("%d", &nro);
 				}	
-				printf("Ingrese los extremos del intervalo a evaluar:\n");
+				printf("\nIngrese los extremos del intervalo a evaluar:\n");
 				scanf("%d", &extremo1);
 				scanf("%d", &extremo2);
 				Ordenar(&extremo1, &extremo2);
-				EVALUA_INTERVALO(extremo1, extremo2);
+				nro = nro - 1;
+				EVALUA_INTERVALO(extremo1, extremo2, polinomios, nro);
+				marcador = 1;
 				printf("Se guardaron los resultados en el archivo");
                         	break;
 
                 	case 4:
-                        	printf("Elegiste la opcion 4\n");
+				if (marcador == 0){
+					printf("Se requiere que realice previamente la opcion 3");
+					break;
+				}
+
                         	break;
 
                 	case 5:
