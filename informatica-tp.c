@@ -5,27 +5,27 @@ void CARGA(float array[][11], int *lines)   //Declaracion de la subrutina "carga
         FILE *arch;      //Declaracion de variable de tipo archivo de nombre arch (si o si va con *)
         int i = 0;       //Declaracion de variable entera llamada "i", para usar de contador
 
-        arch = fopen("polinomios.txt", "r");     /*Asigno a la variable arch la funcion ABRIR con parametro 1: la ruta del archivo (como esta en la  							misma carpeta no hace falta el resto de la ruta) parametro 2: modo de apertura de archivo 							     (r = lectura, w = escritura) */
+        arch = fopen("polinomios.txt", "r");     /*Asigno a la variable arch la funcion ABRIR con parametro 1: la ruta del archivo (como esta en la misma carpeta no hace falta el resto de la ruta) parametro 2: modo de apertura de archivo (r = lectura, w = escritura) */
 
         if (arch == NULL){     // Verificacion de que se abre el archivo (no hace falta, no lo enseñaron en clase)
                 printf("fallo la lectura");
         }
         while (!feof(arch)){      //Repetir mientras el final de archivo sea falso (osea mientras no termine el archivo)
-                fscanf(arch, "%f %f %f %f %f %f %f %f %f %f %f\n", &array[i][0], &array[i][1], &array[i][2], &array[i][3], &array[i][4], &array[i][5], &array[i][6], &array[i][7], &array[i][8], &array[i][9], &array[i][10]);    /*Funcion LEER archivo, en este caso lee un renglon entero por 											repeticion, lee 11 numeros reales y los guarda en el arreglo*/
+                fscanf(arch, "%f %f %f %f %f %f %f %f %f %f %f\n", &array[i][0], &array[i][1], &array[i][2], &array[i][3], &array[i][4], &array[i][5], &array[i][6], &array[i][7], &array[i][8], &array[i][9], &array[i][10]);    /*Funcion LEER archivo, en este caso lee un renglon entero por repeticion, lee 11 numeros reales y los guarda en el arreglo*/
                 i++;    //Incremento el contador i que marca el numero de fila del arreglo, osea cantidad de polinomios
         }
 	fclose(arch);   //Cierro el archivo
 	*lines = i;    //Le asigno a la variable lines el valor de i para devolver al algoritmo principal la cantidad de polinomios
 }
 
-void SUMA_POLI(float array_1[][11],float array_2[],int x)  /*Declaracion de la subrutina SUMA_POLI con argumentos: 1 arreglo bidimensional,									 1 arreglo unidimensional y 1 variable simple */ 
+void SUMA_POLI(float array_1[][11],float array_2[],int x)  /*Declaracion de la subrutina SUMA_POLI con argumentos: 1 arreglo bidimensional, 1 arreglo unidimensional y 1 variable simple */ 
 {
         float suma = 0;     //Declaro la variable real "suma" y la inicializo en 0
         for (int i = 0; i <= 10; i++)    //Repetir para de 0 a 10 (porque los arreglos empiezan a contar del 0)
         {
                 for (int j = 0; j <= x; j++)   //Repetir para de 0 a x(variable ingresada como argumento donde se encuentra la cantidad de polinomios
                 {
-                        suma += array_1[j][i];   /*En cada instancia de los repetir (1er repetir recorre columnas, 2ndo recorre las filas) se le 							asigna a suma el valor de la suma de los coeficientes de polinomios de igual grado, es decir de 						     la misma columna*/
+                        suma += array_1[j][i];   /*En cada instancia de los repetir (1er repetir recorre columnas, 2ndo recorre las filas) se le asigna a suma el valor de la suma de los coeficientes de polinomios de igual grado, es decir de la misma columna*/
                 }
                 array_2[i] = suma;   //Le asigno a cada elemento del arreglo donde esta el resultado el valor de la suma de la columna
                 suma = 0;     //Reinicio suma en 0 para sumar la proxima columna
@@ -58,6 +58,23 @@ float EVALUA_enX(int pol, float x, float array[][11])
 	return (eval);
 }
 
+void Ordenar(int *x1, int *x2)
+{
+	int aux1 = *x1;
+	int aux2 = *x2;
+	int aux3;
+
+	if (aux1 > aux2)
+	{
+		aux3 = aux1;
+		aux1 = aux2;
+		aux2 = aux3;
+	}
+
+	*x1 = aux1;
+	*x2 = aux2;
+}
+
 
 void main()
 {
@@ -69,7 +86,9 @@ void main()
 	int nro;       // Declaro variable para opcion de polinomio en evaluacion
 	float resul_eval; // Declaro variable real para mostrar el resultad de evaluar el polinomio en x
 	float val_x; // Declaro variable real para evaluar el polinomio
-	CARGA(polinomios, &cantpol);    /*Llamo a la variable CARGA para que lea el archivo y guarde los polinomios en el arreglo "polinomios" y					       la cantidad de polinomios en la variable "cantpol"*/
+	int extremo1, extremo2;
+
+	CARGA(polinomios, &cantpol);    /*Llamo a la variable CARGA para que lea el archivo y guarde los polinomios en el arreglo "polinomios" y la cantidad de polinomios en la variable "cantpol"*/
 
 	
 	while (salida == 0){
@@ -123,7 +142,31 @@ void main()
 				break;
 				
                 	case 3:
-                        	printf("Elegiste la opcion 3\n");
+
+				printf("\nEliga un polinomio:\n\n");
+				for(int i = 0; i < cantpol; i++)
+				{  
+					printf("%d_ ", i+1);
+					for( int j = 0; j <= 10; j++)
+					{
+						if (polinomios[i][j] != 0){
+							printf("%2.1fx^%d ", polinomios[i][j], 10-j);
+						}
+					}
+					printf("\n");
+				}
+				scanf ("%d", &nro);
+				while(nro < 1 || nro > cantpol)
+				{
+					printf("Opcion no valida! Vuelva a ingresar.\n");
+					scanf("%d\n", &nro);
+				}	
+				printf("Ingrese los extremos del intervalo a evaluar:\n");
+				scanf("%d", &extremo1);
+				scanf("%d", &extremo2);
+				Ordenar(&extremo1, &extremo2);
+				EVALUA_INTERVALO(extremo1, extremo2);
+				printf("Se guardaron los resultados en el archivo");
                         	break;
 
                 	case 4:
