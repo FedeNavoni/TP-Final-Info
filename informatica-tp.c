@@ -54,7 +54,6 @@ float EVALUA_enX(int pol, float x, float array[][11])
 		pot = potencia(x, 10-i);
 		eval = eval + array[pol][i] * pot;
 	}
-	
 	return (eval);
 }
 
@@ -75,7 +74,7 @@ void Ordenar(int *x1, int *x2)
 	*x2 = aux2;
 }
 
-void EVALUA_INTERVALO(int x1, int x2,float array[][11], int pol)
+void EVALUA_INTERVALO(int x1, int x2, float array[][11], int pol)
 {
 	FILE *arch;
 	int i;
@@ -87,6 +86,90 @@ void EVALUA_INTERVALO(int x1, int x2,float array[][11], int pol)
 		fprintf(arch, "P(%d)= %2.1f\n", i, EVALUA_enX(pol, i, array));
 	}
 	fclose(arch);
+}
+
+void GRAFICAR_HISTOGRAMA(int x1, int x2)
+{
+	FILE *arch;
+	char aux[4];
+	int i = 0;
+	int j;
+	int cantval = x2 - x1 + 1;
+	int marcador = 0;
+	float valores[cantval];
+	float intervalos[6] = {0,0,0,0,0,0};
+
+	arch = fopen("valores_polinomios.txt", "r");
+
+	while(!feof(arch))
+	{
+		fscanf(arch, "%c%c%d%c%c %f\n", &aux[0], &aux[1], &j, &aux[2], &aux[3], &valores[i]);  
+		i++;
+	}
+	for(i = 0; i < cantval; i++)
+	{
+		if(valores[i] <= -20){
+			intervalos[0] ++;
+		}
+		if(valores[i] > -20 && valores[i] <= -10){
+			intervalos[1] ++;
+		}
+		if(valores[i] > -10 && valores[i] <= 0){
+			intervalos[2] ++;
+		}
+		if(valores[i] > 0 && valores[i] <= 10){
+			intervalos[3] ++;
+		}
+		if(valores[i] > 10 && valores[i] <= 20){
+			intervalos[4] ++;
+		}
+		if(valores[i] > 20){
+			intervalos[5] ++;
+		}
+	}
+	for(i = 0; i <= 5; i++){
+		if(intervalos[i] > 30){
+			marcador = 1;
+		}
+	}
+	if(marcador == 1)
+	{
+		printf("Valor de frecuencias de cada rango:\n");	
+		printf("(-Inf, -20] = %2.1f\n", intervalos[0]);
+		printf("(-20, -10] = %2.1f\n", intervalos[1]);
+		printf("(-10, 0] = %2.1f\n", intervalos[2]);
+		printf("(0, 10] = %2.1f\n", intervalos[3]);
+		printf("(10, 20] = %2.1f\n", intervalos[4]);
+		printf("(20, Inf) = %2.1f\n", intervalos[5]);
+	}
+	else
+	{
+		printf("Grafica del histograma:\n");	
+		printf("\n(-Inf, -20]	");
+		for(int a = 0; a < intervalos[0]; a++){
+			printf("=");
+		}
+		printf("\n(-20, -10]	");
+		for(int a = 0; a < intervalos[1]; a++){
+			printf("=");
+		}
+		printf("\n(-10, 0]	");
+		for(int a = 0; a < intervalos[2]; a++){
+			printf("=");
+		}
+		printf("\n(0, 10]	");
+		for(int a = 0; a < intervalos[3]; a++){
+			printf("=");
+		}
+		printf("\n(10, 20]	");
+		for(int a = 0; a < intervalos[4]; a++){
+			printf("=");
+		}
+		printf("\n(20, Inf)	");
+		for(int a = 0; a < intervalos[5]; a++){
+			printf("=");
+		}
+	}
 }
 
 
@@ -186,12 +269,12 @@ void main()
 				printf("Se guardaron los resultados en el archivo");
                         	break;
 
-                	case 4:
+                case 4:
 				if (marcador == 0){
 					printf("Se requiere que realice previamente la opcion 3");
 					break;
 				}
-
+				GRAFICAR_HISTOGRAMA(extremo1, extremo2);
                         	break;
 
                 	case 5:
