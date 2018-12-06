@@ -88,84 +88,84 @@ void EVALUA_INTERVALO(int x1, int x2, float array[][11], int pol)
 	fclose(arch);
 }
 
-void GRAFICAR_HISTOGRAMA(int x1, int x2)
+void GRAFICAR_HISTOGRAMA(int x1, int x2) //Declaro la subrutina GRAFICAR_HISTOGRAMA a la cual se le ingresa por parametros 2 enteros (los extremos del intervalo a evaluar
 {
-	FILE *arch;
-	char aux[4];
-	int i = 0;
-	int j;
-	int cantval = x2 - x1 + 1;
-	int marcador = 0;
-	float valores[cantval];
-	float intervalos[6] = {0,0,0,0,0,0};
+	FILE *arch;   //Declaro una variable de tipo archivo para luego abrir el archivo
+	char aux[4];   //Declaro un arreglo de 4 caracteres
+	int i = 0;   //Declaro un entero para usar como indice
+	int j;   //Declaro un entero para usar como indice	
+	int cantval = x2 - x1 + 1;   //Declaro un entero para la cantidad de valores que saco del archivo que es igual a el extremo final del intervalo menos la cantidad inicial del intervalo +1 
+	int marcador = 0;   //Declaro una bandera que se active cuando un intervalo tiene mas de 30 valores
+	float valores[cantval];   //Declaro un arreglo real con la misma cantidad de elementos que leo del archivo
+	float intervalos[6] = {0,0,0,0,0,0};   //Declaro un arreglo real donde cada elemento representa un intervalo y cuenta la cantidad de valores que caen dentro de el mismo
 
-	arch = fopen("valores_polinomios.txt", "r");
+	arch = fopen("valores_polinomios.txt", "r"); //Asigno a la variable arch la funcion de abrir el archivo en modo lectura
 
-	while(!feof(arch))
+	while(!feof(arch))  //Repetir mientras no haya un fin de arcivo
 	{
-		fscanf(arch, "%c%c%d%c%c %f\n", &aux[0], &aux[1], &j, &aux[2], &aux[3], &valores[i]);  
-		i++;
+		fscanf(arch, "%c%c%d%c%c %f\n", &aux[0], &aux[1], &j, &aux[2], &aux[3], &valores[i]);  //Leo un renglon completo y guardo el valor en el arreglo valores
+		i++;  //Este indice es para que en cada renglon cambie la posicion a guardar en el arreglo valores
 	}
-	for(i = 0; i < cantval; i++)
+	for(i = 0; i < cantval; i++)   //Repetir para de 0(porque los arreglos cuentan desde 0) a la cantidad de valores del archivo para recorrer el arreglo valores y asi ubicar cada valor en su intervalo correspondiente
 	{
-		if(valores[i] <= -20){
+		if(valores[i] <= -20){    //Si el valor es menor a -20 va en el primer elemento del arreglo intervalos
 			intervalos[0] ++;
 		}
-		if(valores[i] > -20 && valores[i] <= -10){
+		if(valores[i] > -20 && valores[i] <= -10){  //Si el valor esta entre -20 y -10 va en el segundo elemento del arreglo intervalos
 			intervalos[1] ++;
 		}
-		if(valores[i] > -10 && valores[i] <= 0){
+		if(valores[i] > -10 && valores[i] <= 0){  //Si el valor esta entre -10 y 0 va en el tercer elemento del arreglo intervalos
 			intervalos[2] ++;
 		}
-		if(valores[i] > 0 && valores[i] <= 10){
+		if(valores[i] > 0 && valores[i] <= 10){   //Si el valor esta entre 0 y 10 va en el cuarto elemento del arreglo intervalos
 			intervalos[3] ++;
 		}
-		if(valores[i] > 10 && valores[i] <= 20){
+		if(valores[i] > 10 && valores[i] <= 20){  //Si el valor esta entre 10 y 20 va en el quinto elemento del arreglo intervalos
 			intervalos[4] ++;
 		}
-		if(valores[i] > 20){
+		if(valores[i] > 20){   //Si el valor es mayor a 20 va en el sexto elemento del arreglo intervalos
 			intervalos[5] ++;
 		}
 	}
-	for(i = 0; i <= 5; i++){
-		if(intervalos[i] > 30){
+	for(i = 0; i <= 5; i++){   //Repetir para de 0 a 5 para recorrer el arreglo intervalos
+		if(intervalos[i] > 30){   //Si alguno de los elementos del arreglo es mayor a 30 entonces activa la bandera "marcador"
 			marcador = 1;
 		}
 	}
-	if(marcador == 1)
+	if(marcador == 1)   //Si la bandera esta activada entonces imprime el intervalo con el numero de valores que hay dentro de el
 	{
 		printf("Valor de frecuencias de cada rango:\n");	
-		printf("(-Inf, -20] = %2.1f\n", intervalos[0]);
-		printf("(-20, -10] = %2.1f\n", intervalos[1]);
+		printf("(-Inf, -20] = %2.1f\n", intervalos[0]);   //EL %2.1f es para que muestre unicamente un digito despues del punto
+		printf("(-20, -10] = %2.1f\n", intervalos[1]);   //Si no imprime un real como 0.00000000 y queda feo
 		printf("(-10, 0] = %2.1f\n", intervalos[2]);
 		printf("(0, 10] = %2.1f\n", intervalos[3]);
 		printf("(10, 20] = %2.1f\n", intervalos[4]);
 		printf("(20, Inf) = %2.1f\n", intervalos[5]);
 	}
-	else
+	else   //Si la bandera no se activa entonces muestra cada intervalo con un igual por cada valor que hay dentro del mismo
 	{
 		printf("Grafica del histograma:\n");	
 		printf("\n(-Inf, -20]	");
-		for(int a = 0; a < intervalos[0]; a++){
+		for(int a = 0; a < intervalos[0]; a++){  //como en el arreglo intervalos tenemos guardado la cantidad de valores que hay dentro del intervalo el repetir para de 0 a este valor imprimira un = por cada valor
 			printf("=");
 		}
-		printf("\n(-20, -10]	");
+		printf("\n(-20, -10] 	");
 		for(int a = 0; a < intervalos[1]; a++){
 			printf("=");
 		}
-		printf("\n(-10, 0]	");
+		printf("\n(-10, 0]   	");
 		for(int a = 0; a < intervalos[2]; a++){
 			printf("=");
 		}
-		printf("\n(0, 10]	");
+		printf("\n(0, 10]    	");
 		for(int a = 0; a < intervalos[3]; a++){
 			printf("=");
 		}
-		printf("\n(10, 20]	");
+		printf("\n(10, 20]   	");
 		for(int a = 0; a < intervalos[4]; a++){
 			printf("=");
 		}
-		printf("\n(20, Inf)	");
+		printf("\n(20, Inf)  	");
 		for(int a = 0; a < intervalos[5]; a++){
 			printf("=");
 		}
@@ -236,7 +236,7 @@ void main()
 				scanf("%f", &val_x);
 				nro = nro - 1;
 				resul_eval = EVALUA_enX(nro, val_x, polinomios);
-                        	printf("\nEl resultado de evaluar el polinomio %d en %2.1f es: \nP(%2.1f)=%2.1f\n", nro, val_x, val_x, resul_eval);
+                        	printf("\nEl resultado de evaluar el polinomio %d en %2.1f es: \nP(%2.1f)=%2.1f\n", nro + 1, val_x, val_x, resul_eval);
 				break;
 				
                 	case 3:
