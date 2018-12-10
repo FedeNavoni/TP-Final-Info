@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-void CARGA(float array[][11], int *lines)   //Declaracion de la subrutina "carga"
+void CARGA(float array[][11], int *lines)   
 {
         FILE *arch;      //Declaracion de variable de tipo archivo de nombre arch (si o si va con *)
         int i = 0;       //Declaracion de variable entera llamada "i", para usar de contador
@@ -97,7 +97,7 @@ void GRAFICAR_HISTOGRAMA(int x1, int x2) //Declaro la subrutina GRAFICAR_HISTOGR
 	int cantval = x2 - x1 + 1;   //Declaro un entero para la cantidad de valores que saco del archivo que es igual a el extremo final del intervalo menos la cantidad inicial del intervalo +1 
 	int marcador = 0;   //Declaro una bandera que se active cuando un intervalo tiene mas de 30 valores
 	float valores[cantval];   //Declaro un arreglo real con la misma cantidad de elementos que leo del archivo
-	float intervalos[6] = {0,0,0,0,0,0};   //Declaro un arreglo real donde cada elemento representa un intervalo y cuenta la cantidad de valores que caen dentro de el mismo
+	int intervalos[6] = {0,0,0,0,0,0};   //Declaro un arreglo real donde cada elemento representa un intervalo y cuenta la cantidad de valores que caen dentro de el mismo
 
 	arch = fopen("valores_polinomios.txt", "r"); //Asigno a la variable arch la funcion de abrir el archivo en modo lectura
 
@@ -106,6 +106,9 @@ void GRAFICAR_HISTOGRAMA(int x1, int x2) //Declaro la subrutina GRAFICAR_HISTOGR
 		fscanf(arch, "%c%c%d%c%c %f\n", &aux[0], &aux[1], &j, &aux[2], &aux[3], &valores[i]);  //Leo un renglon completo y guardo el valor en el arreglo valores
 		i++;  //Este indice es para que en cada renglon cambie la posicion a guardar en el arreglo valores
 	}
+
+	fclose(arch);
+
 	for(i = 0; i < cantval; i++)   //Repetir para de 0(porque los arreglos cuentan desde 0) a la cantidad de valores del archivo para recorrer el arreglo valores y asi ubicar cada valor en su intervalo correspondiente
 	{
 		if(valores[i] <= -20){    //Si el valor es menor a -20 va en el primer elemento del arreglo intervalos
@@ -135,12 +138,12 @@ void GRAFICAR_HISTOGRAMA(int x1, int x2) //Declaro la subrutina GRAFICAR_HISTOGR
 	if(marcador == 1)   //Si la bandera esta activada entonces imprime el intervalo con el numero de valores que hay dentro de el
 	{
 		printf("Valor de frecuencias de cada rango:\n");	
-		printf("(-Inf, -20] = %2.1f\n", intervalos[0]);   //EL %2.1f es para que muestre unicamente un digito despues del punto
-		printf("(-20, -10] = %2.1f\n", intervalos[1]);   //Si no imprime un real como 0.00000000 y queda feo
-		printf("(-10, 0] = %2.1f\n", intervalos[2]);
-		printf("(0, 10] = %2.1f\n", intervalos[3]);
-		printf("(10, 20] = %2.1f\n", intervalos[4]);
-		printf("(20, Inf) = %2.1f\n", intervalos[5]);
+		printf("(-Inf, -20] = %d\n", intervalos[0]);  
+		printf("(-20, -10] = %d\n", intervalos[1]);  
+		printf("(-10, 0] = %d\n", intervalos[2]);
+		printf("(0, 10] = %d\n", intervalos[3]);
+		printf("(10, 20] = %d\n", intervalos[4]);
+		printf("(20, Inf) = %d\n", intervalos[5]);
 	}
 	else   //Si la bandera no se activa entonces muestra cada intervalo con un igual por cada valor que hay dentro del mismo
 	{
@@ -269,7 +272,7 @@ void main()
 				printf("Se guardaron los resultados en el archivo");
                         	break;
 
-                case 4:
+               		case 4:
 				if (marcador == 0){
 					printf("Se requiere que realice previamente la opcion 3");
 					break;
